@@ -1,0 +1,38 @@
+server:
+  port: 8082
+spring:
+  cloud:
+#    loadbalancer:
+#      configurations: same-instance-preference
+    gateway:
+      routes:
+        ## Product Service route
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/product
+        ## Order Service route
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/order
+        ## Inventory Service route
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/api/inventory
+#        ## Discovery Service route
+#        - id: discovery-service
+#          uri: lb://localhost:8761
+
+  application:
+    name: api-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway.route.RoutDefinitionLocator: INFO
+    org.springframework.cloud.gateway: TRACE
